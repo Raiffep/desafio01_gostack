@@ -25,13 +25,13 @@ app.get("/repositories", (request, response) => {
 });
 
 app.post("/repositories", (request, response) => {
-  const { title, url, techs, likes } = request.body;
+  const { title, url, techs } = request.body;
   const repository = {
     id: uuid(),
     title,
     url,
     techs,
-    likes
+    likes: 0
   };
   repositories.push(repository);
 
@@ -62,10 +62,11 @@ app.put("/repositories/:id", (request, response) => {
 
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
-  const isUuid = isUuid(id);
 
-  if (!isUuid) {
-    return response.status(400).json({ error: "Repositorie does not exists" });
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+
+  if (!isUuid(id)) {
+    return response.status(204).json({ error: "Repositorie does not exists" });
   }
 
   repositories.splice(repositoryIndex, 1);
